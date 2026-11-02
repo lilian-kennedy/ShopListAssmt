@@ -1,12 +1,9 @@
 package com.mmgpt.shoplistgpt
 
 import android.os.Bundle
-import android.view.GestureDetector
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.GestureDetectorCompat
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -78,26 +75,11 @@ class PlanCategoriesFragment : Fragment() {
         binding.recyclerView.adapter = adapter
         dragHelper.attachToRecyclerView(binding.recyclerView)
 
-        val gestureDetector = GestureDetectorCompat(requireContext(), object : GestureDetector.SimpleOnGestureListener() {
-            override fun onDoubleTap(e: MotionEvent): Boolean {
-                val child = binding.recyclerView.findChildViewUnder(e.x, e.y)
-                val position = child?.let { binding.recyclerView.getChildAdapterPosition(it) } ?: RecyclerView.NO_POSITION
-                if (position != RecyclerView.NO_POSITION) {
-                    val item = adapter.currentList.getOrNull(position)
-                    if (item?.isHeading == true) {
-                        val index = position - 1
-                        val viewPager = requireActivity().findViewById<ViewPager2>(R.id.viewPager)
-                        viewPager.currentItem = index + 1
-                        return true
-                    }
-                }
-                return super.onDoubleTap(e)
+        binding.recyclerView.setOnRowDoubleTap { position ->
+            if (adapter.currentList.getOrNull(position)?.isHeading == true) {
+                // Row 0 is the add placeholder, so category i is row i + 1 and pager page i + 1.
+                requireActivity().findViewById<ViewPager2>(R.id.viewPager).currentItem = position
             }
-        })
-
-        binding.recyclerView.setOnTouchListener { _, event ->
-            gestureDetector.onTouchEvent(event)
-            false
         }
 
         binding.btnClearAll.visibility = View.VISIBLE
