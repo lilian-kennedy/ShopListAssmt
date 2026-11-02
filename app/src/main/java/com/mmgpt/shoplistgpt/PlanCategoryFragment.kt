@@ -1,43 +1,17 @@
 package com.mmgpt.shoplistgpt
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mmgpt.shoplistgpt.adapter.ItemAdapter
-import com.mmgpt.shoplistgpt.databinding.FragmentCategoryBinding
 import com.mmgpt.shoplistgpt.ShoppingItem
 
-class PlanCategoryFragment : Fragment() {
-
-    private val viewModel: ShoppingListViewModel by activityViewModels()
-    private var index: Int = 0
-    private var _binding: FragmentCategoryBinding? = null
-    private val binding get() = _binding!!
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        index = arguments?.getInt(ARG_INDEX) ?: 0
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentCategoryBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+class PlanCategoryFragment : IndexedCategoryFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.chkSelectAll.visibility = View.VISIBLE
         lateinit var adapter: ItemAdapter
         val dragHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
@@ -118,17 +92,7 @@ class PlanCategoryFragment : Fragment() {
             .show()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
     companion object {
-        private const val ARG_INDEX = "index"
-        fun newInstance(index: Int): PlanCategoryFragment {
-            val fragment = PlanCategoryFragment()
-            fragment.arguments = Bundle().apply { putInt(ARG_INDEX, index) }
-            return fragment
-        }
+        fun newInstance(index: Int): PlanCategoryFragment = PlanCategoryFragment().withIndex(index)
     }
 }

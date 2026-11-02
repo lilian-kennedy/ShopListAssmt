@@ -1,38 +1,18 @@
 package com.mmgpt.shoplistgpt
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.mmgpt.shoplistgpt.adapter.ItemAdapter
-import com.mmgpt.shoplistgpt.databinding.FragmentCategoryBinding
 import com.mmgpt.shoplistgpt.ShoppingItem
 
-class PlanCategoriesFragment : Fragment() {
-
-    private val viewModel: ShoppingListViewModel by activityViewModels()
-    private var _binding: FragmentCategoryBinding? = null
-    private val binding get() = _binding!!
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        _binding = FragmentCategoryBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+class PlanCategoriesFragment : BaseCategoryFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         lateinit var adapter: ItemAdapter
         val dragHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
             ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0
@@ -119,11 +99,6 @@ class PlanCategoriesFragment : Fragment() {
             }
             .setNegativeButton(android.R.string.cancel, null)
             .show()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }
 
